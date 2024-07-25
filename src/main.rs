@@ -51,12 +51,19 @@ fn define_ast(
     }
     data_file.write(b"}\n\n")?;
 
-    // Expression enum
+    // Expressions enum
     data_file.write(b"\npub enum Expr {\n")?;
     for t in types.iter() {
         data_file.write(format!("\t{}(Box<{}>),\n", t, t).as_bytes())?;
     }
-    data_file.write(b"}\n")?;
+    data_file.write(b"}\n\n")?;
+
+    // Implementing accept functions for Expr enum
+    data_file.write(b"impl Expr {\n")?;
+    data_file.write(b"\tpub fn accept<T>(&self, visitor: &mut dyn Visitor<T>) -> T {\n")?;
+
+    data_file.write(b"\t}\n")?;
+    data_file.write(b"}\n\n")?;
 
     // Defeinig structs
     for x in &input {
