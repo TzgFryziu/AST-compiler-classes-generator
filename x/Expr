@@ -1,0 +1,70 @@
+use crate::token::Token;
+
+pub trait Visitor<T> {
+	fn visit_binary(&mut self, binary: &Binary) -> T;
+	fn visit_grouping(&mut self, grouping: &Grouping) -> T;
+	fn visit_literal(&mut self, literal: &Literal) -> T;
+	fn visit_unary(&mut self, unary: &Unary) -> T;
+}
+
+
+pub enum Expr {
+	Binary(Box<Binary>),
+	Grouping(Box<Grouping>),
+	Literal(Box<Literal>),
+	Unary(Box<Unary>),
+}
+struct Binary {
+	pub left: Box<Expr>,
+	pub operator: Token,
+	pub right: Box<Expr>,
+}
+
+impl Binary {
+	fn new(left: Expr, operator: Token, right: Expr, ) -> Binary {
+		Binary {
+			left: Box::new(left),
+			operator,
+			right: Box::new(right),
+		};
+	}
+}
+
+struct Grouping {
+	pub expression: Box<Expr>,
+}
+
+impl Grouping {
+	fn new(expression: Expr, ) -> Grouping {
+		Grouping {
+			expression: Box::new(expression),
+		};
+	}
+}
+
+struct Literal {
+	pub value: String,
+}
+
+impl Literal {
+	fn new(value: String, ) -> Literal {
+		Literal {
+			value,
+		};
+	}
+}
+
+struct Unary {
+	pub operator: Token,
+	pub right: Box<Expr>,
+}
+
+impl Unary {
+	fn new(operator: Token, right: Expr, ) -> Unary {
+		Unary {
+			operator,
+			right: Box::new(right),
+		};
+	}
+}
+
